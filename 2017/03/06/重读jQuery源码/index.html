@@ -16,16 +16,33 @@
     
     
 
-    <meta name="description" content="我的JavaScript学习之旅">
+    <meta name="description" content="重读jQuery源码最近是求职季，做面试题时发现基础又变弱了，没办法，只有重新掏出”虎鹤双形“，重新翻出jQuery来学习吧。
+下载使用npm i jquery 下载源码
+
+目录在这里，一目了然
+先从core开始jQuery的入口，在core.js中的26行
+12345678910var//此处是jQuery的当前版本3.1.1	version = &quot;3.1.1&quot;,	// 定义一个jQuery拷贝">
 <meta property="og:type" content="article">
 <meta property="og:title" content="重读jQuery源码 | 切忘录">
 <meta property="og:url" content="http://zertu.space/2017/03/06/重读jQuery源码/index.html">
 <meta property="og:site_name" content="切忘录">
-<meta property="og:description" content="我的JavaScript学习之旅">
-<meta property="og:updated_time" content="2017-03-06T14:32:42.000Z">
+<meta property="og:description" content="重读jQuery源码最近是求职季，做面试题时发现基础又变弱了，没办法，只有重新掏出”虎鹤双形“，重新翻出jQuery来学习吧。
+下载使用npm i jquery 下载源码
+
+目录在这里，一目了然
+先从core开始jQuery的入口，在core.js中的26行
+12345678910var//此处是jQuery的当前版本3.1.1	version = &quot;3.1.1&quot;,	// 定义一个jQuery拷贝">
+<meta property="og:image" content="http://i1.piimg.com/4851/329e33b832f1f749.png">
+<meta property="og:updated_time" content="2017-03-06T15:00:58.392Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="重读jQuery源码 | 切忘录">
-<meta name="twitter:description" content="我的JavaScript学习之旅">
+<meta name="twitter:description" content="重读jQuery源码最近是求职季，做面试题时发现基础又变弱了，没办法，只有重新掏出”虎鹤双形“，重新翻出jQuery来学习吧。
+下载使用npm i jquery 下载源码
+
+目录在这里，一目了然
+先从core开始jQuery的入口，在core.js中的26行
+12345678910var//此处是jQuery的当前版本3.1.1	version = &quot;3.1.1&quot;,	// 定义一个jQuery拷贝">
+<meta name="twitter:image" content="http://i1.piimg.com/4851/329e33b832f1f749.png">
     
     
     
@@ -219,7 +236,13 @@ classes that you can use:
   </header>
 
   <section id="post-content" class="article-content post">
-    
+    <h1 id="重读jQuery源码"><a href="#重读jQuery源码" class="headerlink" title="重读jQuery源码"></a>重读jQuery源码</h1><p>最近是求职季，做面试题时发现基础又变弱了，没办法，只有重新掏出”虎鹤双形“，重新翻出jQuery来学习吧。</p>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><p>使用npm i jquery 下载源码</p>
+<p><img src="http://i1.piimg.com/4851/329e33b832f1f749.png" alt=""></p>
+<p>目录在这里，一目了然</p>
+<h2 id="先从core开始"><a href="#先从core开始" class="headerlink" title="先从core开始"></a>先从core开始</h2><p>jQuery的入口，在core.js中的26行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span></div><div class="line"><span class="comment">//此处是jQuery的当前版本3.1.1</span></div><div class="line">	version = <span class="string">"3.1.1"</span>,</div><div class="line"></div><div class="line">	<span class="comment">// 定义一个jQuery拷贝</span></div><div class="line">	jQuery = <span class="function"><span class="keyword">function</span>(<span class="params"> selector, context </span>) </span>&#123;</div><div class="line">		<span class="comment">// jQuery是一个全局的对象，但是当我们调用他时，并不需要new，在这里我们调用$的时候，jQuery自动帮我们new了一个jQuery对象</span></div><div class="line">		<span class="keyword">return</span> <span class="keyword">new</span> jQuery.fn.init( selector, context );</div><div class="line">        <span class="comment">//init有2个参数，在下面进行讲解</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+
   </section>
 
   
