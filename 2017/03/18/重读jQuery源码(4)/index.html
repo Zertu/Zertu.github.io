@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      重读jQuery源码(4) | 切忘录 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="Zertu">
+    
+    
+
+    <meta name="description" content="今天来看一下Defferd的源码，他是以Callbacks为基础，jQuery自己实现的符合A+规范的promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757">
+<meta property="og:type" content="article">
+<meta property="og:title" content="重读jQuery源码(4) | 切忘录">
+<meta property="og:url" content="http://zertu.space/2017/03/18/重读jQuery源码(4)/index.html">
+<meta property="og:site_name" content="切忘录">
+<meta property="og:description" content="今天来看一下Defferd的源码，他是以Callbacks为基础，jQuery自己实现的符合A+规范的promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757">
+<meta property="og:updated_time" content="2017-03-18T13:40:55.584Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="重读jQuery源码(4) | 切忘录">
+<meta name="twitter:description" content="今天来看一下Defferd的源码，他是以Callbacks为基础，jQuery自己实现的符合A+规范的promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link rel="stylesheet" href="/css/archive.css">
+    <link rel="stylesheet" href="/css/china-social-icon.css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">切忘录</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+        <p class="panel-cover__description">
+          咸鱼的日常吹比
+        </p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+<nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+    
+      <!-- Github -->
+      <li class="navigation__item">
+        <a href="https://github.com/someus" title="Huno on GitHub">
+          <i class='icon icon-social-github'></i>
+          <span class="label">GitHub</span>
+        </a>
+      </li>
+    
+
+    <!-- China social icon -->
+    <!--
+    
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-douban'></i>
+          <span class="label">Douban</span>
+        </a>
+      </li>
+
+      <li class="navigation__item">
+        <a href="" title="">
+          <i class='icon cs-icon-weibo'></i>
+          <span class="label">Weibo</span>
+        </a>
+      </li>
+
+    -->
+
+
+
+  </ul>
+</nav>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">重读jQuery源码(4)</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2017-03-18" class="post-meta__date date">2017-03-18</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+             &#8226; 标签:
+            <font class="tags">
+              <a class="tags-link" href="/tags/JavaScript-jQuery/">JavaScript jQuery</a>
+            </font>
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <p>今天来看一下Defferd的源码，他是以Callbacks为基础，jQuery自己实现的符合A+规范的promise<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div></pre></td><td class="code"><pre><div class="line">jQuery.extend( &#123;</div><div class="line">	<span class="attr">Deferred</span>: <span class="function"><span class="keyword">function</span>(<span class="params"> func </span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span> tuples = [</div><div class="line">				<span class="comment">// action, add listener, callbacks,</span></div><div class="line">				<span class="comment">// ... .then handlers, argument index, [final state]</span></div><div class="line">				[ <span class="string">"notify"</span>, <span class="string">"progress"</span>, jQuery.Callbacks( <span class="string">"memory"</span> ),jQuery.Callbacks( <span class="string">"memory"</span> ), <span class="number">2</span> ],</div><div class="line">				[ <span class="string">"resolve"</span>, <span class="string">"done"</span>, jQuery.Callbacks( <span class="string">"once memory"</span> ),jQuery.Callbacks( <span class="string">"once memory"</span> ), <span class="number">0</span>, <span class="string">"resolved"</span> ],</div><div class="line">				[ <span class="string">"reject"</span>, <span class="string">"fail"</span>, jQuery.Callbacks( <span class="string">"once memory"</span> ),jQuery.Callbacks( <span class="string">"once memory"</span> ), <span class="number">1</span>, <span class="string">"rejected"</span> ]</div><div class="line">			],</div><div class="line">            <span class="comment">//定义初始状态，等待</span></div><div class="line">			state = <span class="string">"pending"</span>,</div><div class="line">			promise = &#123;</div><div class="line">                <span class="comment">//返回当前状态</span></div><div class="line">				state: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">					<span class="keyword">return</span> state;</div><div class="line">				&#125;,</div><div class="line">                <span class="comment">//当递延对象是解决或拒绝时被调用添加处理程序。</span></div><div class="line">				always: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">					deferred.done( <span class="built_in">arguments</span> ).fail( <span class="built_in">arguments</span> );</div><div class="line">					<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">				&#125;,</div><div class="line">				<span class="string">"catch"</span>: <span class="function"><span class="keyword">function</span>(<span class="params"> fn </span>) </span>&#123;</div><div class="line">					<span class="keyword">return</span> promise.then( <span class="literal">null</span>, fn );</div><div class="line">				&#125;,</div><div class="line">				<span class="comment">// 已被弃用，保持兼容，现在应该使用then</span></div><div class="line">				pipe: <span class="function"><span class="keyword">function</span>(<span class="params"> <span class="regexp">/* fnDone, fnFail, fnProgress */</span> </span>) </span>&#123;</div><div class="line">					<span class="keyword">var</span> fns = <span class="built_in">arguments</span>;</div><div class="line"></div><div class="line">					<span class="keyword">return</span> jQuery.Deferred( <span class="function"><span class="keyword">function</span>(<span class="params"> newDefer </span>) </span>&#123;</div><div class="line">						jQuery.each( tuples, <span class="function"><span class="keyword">function</span>(<span class="params"> i, tuple </span>) </span>&#123;</div><div class="line"></div><div class="line">							<span class="comment">// Map tuples (progress, done, fail) to arguments (done, fail, progress)</span></div><div class="line">							<span class="keyword">var</span> fn = jQuery.isFunction( fns[ tuple[ <span class="number">4</span> ] ] ) &amp;&amp; fns[ tuple[ <span class="number">4</span> ] ];</div><div class="line"></div><div class="line">							<span class="comment">// deferred.progress(function() &#123; bind to newDefer or newDefer.notify &#125;)</span></div><div class="line">							<span class="comment">// deferred.done(function() &#123; bind to newDefer or newDefer.resolve &#125;)</span></div><div class="line">							<span class="comment">// deferred.fail(function() &#123; bind to newDefer or newDefer.reject &#125;)</span></div><div class="line">							deferred[ tuple[ <span class="number">1</span> ] ]( <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">								<span class="keyword">var</span> returned = fn &amp;&amp; fn.apply( <span class="keyword">this</span>, <span class="built_in">arguments</span> );</div><div class="line">								<span class="keyword">if</span> ( returned &amp;&amp; jQuery.isFunction( returned.promise ) ) &#123;</div><div class="line">									returned.promise()</div><div class="line">										.progress( newDefer.notify )</div><div class="line">										.done( newDefer.resolve )</div><div class="line">										.fail( newDefer.reject );</div><div class="line">								&#125; <span class="keyword">else</span> &#123;</div><div class="line">									newDefer[ tuple[ <span class="number">0</span> ] + <span class="string">"With"</span> ](</div><div class="line">										<span class="keyword">this</span>,</div><div class="line">										fn ? [ returned ] : <span class="built_in">arguments</span></div><div class="line">									);</div><div class="line">								&#125;</div><div class="line">							&#125; );</div><div class="line">						&#125; );</div><div class="line">						fns = <span class="literal">null</span>;</div><div class="line">					&#125; ).promise();</div><div class="line">				&#125;,</div><div class="line">                <span class="comment">//              完成时回调   失败时回调   进行时的回调</span></div><div class="line">				then: <span class="function"><span class="keyword">function</span>(<span class="params"> onFulfilled, onRejected, onProgress </span>) </span>&#123;</div><div class="line">					<span class="keyword">var</span> maxDepth = <span class="number">0</span>;</div><div class="line">					<span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params"> depth, deferred, handler, special </span>) </span>&#123;</div><div class="line">						<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">							<span class="keyword">var</span> that = <span class="keyword">this</span>,</div><div class="line">								args = <span class="built_in">arguments</span>,</div><div class="line">								mightThrow = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">									<span class="keyword">var</span> returned, then;</div><div class="line">									<span class="comment">// Support: Promises/A+ section 2.3.3.3.3</span></div><div class="line">									<span class="comment">// https://promisesaplus.com/#point-59</span></div><div class="line">									<span class="comment">// If both resolvePromise and rejectPromise are called, or multiple calls to the same argument are made, the first call takes precedence, and any further calls are ignored.</span></div><div class="line">                                    <span class="comment">//如果成功和失败回调都被触发，或者相同参数被多处调用，第一个调用有限，之后的会被忽略</span></div><div class="line">									<span class="keyword">if</span> ( depth &lt; maxDepth ) &#123;</div><div class="line">										<span class="keyword">return</span>;</div><div class="line">									&#125;</div><div class="line">									returned = handler.apply( that, args );</div><div class="line">									<span class="comment">// Support: Promises/A+ section 2.3.1</span></div><div class="line">									<span class="comment">// https://promisesaplus.com/#point-48</span></div><div class="line">                                    <span class="comment">// To run [[Resolve]](promise, x), perform the following steps:</span></div><div class="line">                                    <span class="comment">// If promise and x refer to the same object, reject promise with a TypeError as the reason.</span></div><div class="line">                                    <span class="comment">// 如果 promise 和 x 是相同对象，拒绝promise并返回TypeError</span></div><div class="line">									<span class="keyword">if</span> ( returned === deferred.promise() ) &#123;</div><div class="line">										<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>( <span class="string">"Thenable self-resolution"</span> );</div><div class="line">									&#125;</div><div class="line">									<span class="comment">// Support: Promises/A+ sections 2.3.3.1, 3.5</span></div><div class="line">									<span class="comment">// https://promisesaplus.com/#point-54</span></div><div class="line">									<span class="comment">// https://promisesaplus.com/#point-75</span></div><div class="line">									<span class="comment">// Retrieve `then` only once</span></div><div class="line">                                    <span class="comment">// 只接受一次then</span></div><div class="line">									then = returned &amp;&amp;</div><div class="line">										<span class="comment">// Support: Promises/A+ section 2.3.4</span></div><div class="line">										<span class="comment">// https://promisesaplus.com/#point-64</span></div><div class="line">										<span class="comment">// Only check objects and functions for thenability</span></div><div class="line">										( <span class="keyword">typeof</span> returned === <span class="string">"object"</span> ||</div><div class="line">											<span class="keyword">typeof</span> returned === <span class="string">"function"</span> ) &amp;&amp;</div><div class="line">										returned.then;</div><div class="line">									<span class="comment">// Handle a returned thenable</span></div><div class="line">									<span class="keyword">if</span> ( jQuery.isFunction( then ) ) &#123;</div><div class="line"></div><div class="line">										<span class="comment">// Special processors (notify) just wait for resolution</span></div><div class="line">										<span class="keyword">if</span> ( special ) &#123;</div><div class="line">											then.call(</div><div class="line">												returned,</div><div class="line">												resolve( maxDepth, deferred, Identity, special ),</div><div class="line">												resolve( maxDepth, deferred, Thrower, special )</div><div class="line">											);</div><div class="line">										<span class="comment">// Normal processors (resolve) also hook into progress</span></div><div class="line">										&#125; <span class="keyword">else</span> &#123;</div><div class="line">											<span class="comment">// ...and disregard older resolution values</span></div><div class="line">											maxDepth++;</div><div class="line">											then.call(</div><div class="line">												returned,</div><div class="line">												resolve( maxDepth, deferred, Identity, special ),</div><div class="line">												resolve( maxDepth, deferred, Thrower, special ),</div><div class="line">												resolve( maxDepth, deferred, Identity,</div><div class="line">													deferred.notifyWith )</div><div class="line">											);</div><div class="line">										&#125;</div><div class="line">									<span class="comment">// Handle all other returned values</span></div><div class="line">									&#125; <span class="keyword">else</span> &#123;</div><div class="line">										<span class="comment">// Only substitute handlers pass on context</span></div><div class="line">										<span class="comment">// and multiple values (non-spec behavior)</span></div><div class="line">										<span class="keyword">if</span> ( handler !== Identity ) &#123;</div><div class="line">											that = <span class="literal">undefined</span>;</div><div class="line">											args = [ returned ];</div><div class="line">										&#125;</div><div class="line">										<span class="comment">// Process the value(s)</span></div><div class="line">										<span class="comment">// Default process is resolve</span></div><div class="line">										( special || deferred.resolveWith )( that, args );</div><div class="line">									&#125;</div><div class="line">								&#125;,</div><div class="line">								<span class="comment">// Only normal processors (resolve) catch and reject exceptions</span></div><div class="line">								process = special ?</div><div class="line">									mightThrow :</div><div class="line">									<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">										<span class="keyword">try</span> &#123;</div><div class="line">											mightThrow();</div><div class="line">										&#125; <span class="keyword">catch</span> ( e ) &#123;</div><div class="line">											<span class="keyword">if</span> ( jQuery.Deferred.exceptionHook ) &#123;</div><div class="line">												jQuery.Deferred.exceptionHook( e,</div><div class="line">													process.stackTrace );</div><div class="line">											&#125;</div><div class="line">											<span class="comment">// Support: Promises/A+ section 2.3.3.3.4.1</span></div><div class="line">											<span class="comment">// https://promisesaplus.com/#point-61</span></div><div class="line">											<span class="comment">// Ignore post-resolution exceptions</span></div><div class="line">											<span class="keyword">if</span> ( depth + <span class="number">1</span> &gt;= maxDepth ) &#123;</div><div class="line">												<span class="comment">// Only substitute handlers pass on context</span></div><div class="line">												<span class="comment">// and multiple values (non-spec behavior)</span></div><div class="line">												<span class="keyword">if</span> ( handler !== Thrower ) &#123;</div><div class="line">													that = <span class="literal">undefined</span>;</div><div class="line">													args = [ e ];</div><div class="line">												&#125;</div><div class="line">												deferred.rejectWith( that, args );</div><div class="line">											&#125;</div><div class="line">										&#125;</div><div class="line">									&#125;;</div><div class="line">							<span class="comment">// Support: Promises/A+ section 2.3.3.3.1</span></div><div class="line">							<span class="comment">// https://promisesaplus.com/#point-57</span></div><div class="line">							<span class="comment">// Re-resolve promises immediately to dodge false rejection from</span></div><div class="line">							<span class="comment">// subsequent errors</span></div><div class="line">							<span class="keyword">if</span> ( depth ) &#123;</div><div class="line">								process();</div><div class="line">							&#125; <span class="keyword">else</span> &#123;</div><div class="line">								<span class="comment">// Call an optional hook to record the stack, in case of exception</span></div><div class="line">								<span class="comment">// since it's otherwise lost when execution goes async</span></div><div class="line">								<span class="keyword">if</span> ( jQuery.Deferred.getStackHook ) &#123;</div><div class="line">									process.stackTrace = jQuery.Deferred.getStackHook();</div><div class="line">								&#125;</div><div class="line">								<span class="built_in">window</span>.setTimeout( process );</div><div class="line">							&#125;</div><div class="line">						&#125;;</div><div class="line">					&#125;</div><div class="line">					<span class="keyword">return</span> jQuery.Deferred( <span class="function"><span class="keyword">function</span>(<span class="params"> newDefer </span>) </span>&#123;</div><div class="line">						<span class="comment">// progress_handlers.add( ... )</span></div><div class="line">						tuples[ <span class="number">0</span> ][ <span class="number">3</span> ].add(</div><div class="line">							resolve(</div><div class="line">								<span class="number">0</span>,</div><div class="line">								newDefer,</div><div class="line">								jQuery.isFunction( onProgress ) ?</div><div class="line">									onProgress :</div><div class="line">									Identity,</div><div class="line">								newDefer.notifyWith</div><div class="line">							)</div><div class="line">						);</div><div class="line">						<span class="comment">// fulfilled_handlers.add( ... )</span></div><div class="line">						tuples[ <span class="number">1</span> ][ <span class="number">3</span> ].add(</div><div class="line">							resolve(</div><div class="line">								<span class="number">0</span>,</div><div class="line">								newDefer,</div><div class="line">								jQuery.isFunction( onFulfilled ) ?</div><div class="line">									onFulfilled :</div><div class="line">									Identity</div><div class="line">							)</div><div class="line">						);</div><div class="line">						<span class="comment">// rejected_handlers.add( ... )</span></div><div class="line">						tuples[ <span class="number">2</span> ][ <span class="number">3</span> ].add(</div><div class="line">							resolve(</div><div class="line">								<span class="number">0</span>,</div><div class="line">								newDefer,</div><div class="line">								jQuery.isFunction( onRejected ) ?</div><div class="line">									onRejected :</div><div class="line">									Thrower</div><div class="line">							)</div><div class="line">						);</div><div class="line">					&#125; ).promise();</div><div class="line">				&#125;,</div><div class="line">				<span class="comment">// Get a promise for this deferred</span></div><div class="line">				<span class="comment">// If obj is provided, the promise aspect is added to the object</span></div><div class="line">				promise: <span class="function"><span class="keyword">function</span>(<span class="params"> obj </span>) </span>&#123;</div><div class="line">					<span class="keyword">return</span> obj != <span class="literal">null</span> ? jQuery.extend( obj, promise ) : promise;</div><div class="line">				&#125;</div><div class="line">			&#125;,</div><div class="line">			deferred = &#123;&#125;;</div><div class="line">		<span class="comment">// Add list-specific methods</span></div><div class="line">		jQuery.each( tuples, <span class="function"><span class="keyword">function</span>(<span class="params"> i, tuple </span>) </span>&#123;</div><div class="line">			<span class="keyword">var</span> list = tuple[ <span class="number">2</span> ],</div><div class="line">				stateString = tuple[ <span class="number">5</span> ];</div><div class="line"></div><div class="line">			<span class="comment">// promise.progress = list.add</span></div><div class="line">			<span class="comment">// promise.done = list.add</span></div><div class="line">			<span class="comment">// promise.fail = list.add</span></div><div class="line">			promise[ tuple[ <span class="number">1</span> ] ] = list.add;</div><div class="line"></div><div class="line">			<span class="comment">// Handle state</span></div><div class="line">			<span class="keyword">if</span> ( stateString ) &#123;</div><div class="line">				list.add(</div><div class="line">					<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">						<span class="comment">// state = "resolved" (i.e., fulfilled)</span></div><div class="line">						<span class="comment">// state = "rejected"</span></div><div class="line">						state = stateString;</div><div class="line">					&#125;,</div><div class="line"></div><div class="line">					<span class="comment">// rejected_callbacks.disable</span></div><div class="line">					<span class="comment">// fulfilled_callbacks.disable</span></div><div class="line">					tuples[ <span class="number">3</span> - i ][ <span class="number">2</span> ].disable,</div><div class="line"></div><div class="line">					<span class="comment">// progress_callbacks.lock</span></div><div class="line">					tuples[ <span class="number">0</span> ][ <span class="number">2</span> ].lock</div><div class="line">				);</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			<span class="comment">// progress_handlers.fire</span></div><div class="line">			<span class="comment">// fulfilled_handlers.fire</span></div><div class="line">			<span class="comment">// rejected_handlers.fire</span></div><div class="line">			list.add( tuple[ <span class="number">3</span> ].fire );</div><div class="line"></div><div class="line">			<span class="comment">// deferred.notify = function() &#123; deferred.notifyWith(...) &#125;</span></div><div class="line">			<span class="comment">// deferred.resolve = function() &#123; deferred.resolveWith(...) &#125;</span></div><div class="line">			<span class="comment">// deferred.reject = function() &#123; deferred.rejectWith(...) &#125;</span></div><div class="line">			deferred[ tuple[ <span class="number">0</span> ] ] = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">				deferred[ tuple[ <span class="number">0</span> ] + <span class="string">"With"</span> ]( <span class="keyword">this</span> === deferred ? <span class="literal">undefined</span> : <span class="keyword">this</span>, <span class="built_in">arguments</span> );</div><div class="line">				<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">			&#125;;</div><div class="line"></div><div class="line">			<span class="comment">// deferred.notifyWith = list.fireWith</span></div><div class="line">			<span class="comment">// deferred.resolveWith = list.fireWith</span></div><div class="line">			<span class="comment">// deferred.rejectWith = list.fireWith</span></div><div class="line">			deferred[ tuple[ <span class="number">0</span> ] + <span class="string">"With"</span> ] = list.fireWith;</div><div class="line">		&#125; );</div><div class="line"></div><div class="line">		<span class="comment">// Make the deferred a promise</span></div><div class="line">		promise.promise( deferred );</div><div class="line"></div><div class="line">		<span class="comment">// Call given func if any</span></div><div class="line">		<span class="keyword">if</span> ( func ) &#123;</div><div class="line">			func.call( deferred, deferred );</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// All done!</span></div><div class="line">		<span class="keyword">return</span> deferred;</div><div class="line">	&#125;,</div><div class="line"></div><div class="line">	<span class="comment">// Deferred helper</span></div><div class="line">	when: <span class="function"><span class="keyword">function</span>(<span class="params"> singleValue </span>) </span>&#123;</div><div class="line">		<span class="keyword">var</span></div><div class="line"></div><div class="line">			<span class="comment">// count of uncompleted subordinates</span></div><div class="line">			remaining = <span class="built_in">arguments</span>.length,</div><div class="line"></div><div class="line">			<span class="comment">// count of unprocessed arguments</span></div><div class="line">			i = remaining,</div><div class="line"></div><div class="line">			<span class="comment">// subordinate fulfillment data</span></div><div class="line">			resolveContexts = <span class="built_in">Array</span>( i ),</div><div class="line">			resolveValues = slice.call( <span class="built_in">arguments</span> ),</div><div class="line"></div><div class="line">			<span class="comment">// the master Deferred</span></div><div class="line">			master = jQuery.Deferred(),</div><div class="line"></div><div class="line">			<span class="comment">// subordinate callback factory</span></div><div class="line">			updateFunc = <span class="function"><span class="keyword">function</span>(<span class="params"> i </span>) </span>&#123;</div><div class="line">				<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"> value </span>) </span>&#123;</div><div class="line">					resolveContexts[ i ] = <span class="keyword">this</span>;</div><div class="line">					resolveValues[ i ] = <span class="built_in">arguments</span>.length &gt; <span class="number">1</span> ? slice.call( <span class="built_in">arguments</span> ) : value;</div><div class="line">					<span class="keyword">if</span> ( !( --remaining ) ) &#123;</div><div class="line">						master.resolveWith( resolveContexts, resolveValues );</div><div class="line">					&#125;</div><div class="line">				&#125;;</div><div class="line">			&#125;;</div><div class="line"></div><div class="line">		<span class="comment">// Single- and empty arguments are adopted like Promise.resolve</span></div><div class="line">		<span class="keyword">if</span> ( remaining &lt;= <span class="number">1</span> ) &#123;</div><div class="line">			adoptValue( singleValue, master.done( updateFunc( i ) ).resolve, master.reject );</div><div class="line"></div><div class="line">			<span class="comment">// Use .then() to unwrap secondary thenables (cf. gh-3000)</span></div><div class="line">			<span class="keyword">if</span> ( master.state() === <span class="string">"pending"</span> ||</div><div class="line">				jQuery.isFunction( resolveValues[ i ] &amp;&amp; resolveValues[ i ].then ) ) &#123;</div><div class="line"></div><div class="line">				<span class="keyword">return</span> master.then();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="comment">// Multiple arguments are aggregated like Promise.all array elements</span></div><div class="line">		<span class="keyword">while</span> ( i-- ) &#123;</div><div class="line">			adoptValue( resolveValues[ i ], updateFunc( i ), master.reject );</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="keyword">return</span> master.promise();</div><div class="line">	&#125;</div><div class="line">&#125; );</div></pre></td></tr></table></figure></p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
